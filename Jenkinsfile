@@ -6,8 +6,8 @@ pipeline {
     }
 
     environment {
-            POSTGRESQL_ROOT_LOGIN = credentials('postgres-root-login')
-        }
+            POSTGRESQL_ROOT_LOGIN = credentials('postgresql-root-login')
+    }
 
     stages {
         stage('Checkout') {
@@ -54,9 +54,7 @@ pipeline {
                 sh 'echo y | docker container prune '
                 sh 'docker volume rm nguyenhoanganh-postgres-data || echo "no volume"'
                 // Start the PostgreSQL container
-                sh "docker run -d --rm network dev --name ${POSTGRES_CONTAINER_NAME}
-                -v ${POSTGRES_CONTAINER_NAME}-data:/var/lib/postgres
-                -e POSTGRES_ROOT_PASSWORD=${POSTGRES_ROOT_LOGIN_PSW} -p 5432:5432 postgres:latest"
+                sh "docker run -d --rm network dev --name ${POSTGRES_CONTAINER_NAME} -v ${POSTGRES_CONTAINER_NAME}-data:/var/lib/postgres -e POSTGRES_ROOT_PASSWORD=${POSTGRES_ROOT_LOGIN_PSW} -p 5432:5432 postgres:latest"
                 sh 'sleep 15'
             }
 
@@ -67,9 +65,7 @@ pipeline {
                 sh 'docker network create dev || echo "this network exists"'
                 sh 'echo y | docker container prune '
                 // Start the Spring Boot application container and link it with the PostgreSQL container
-                //sh "docker run -d --rm --name common-service --link ${POSTGRES_CONTAINER_NAME}:postgres -p 8080:8080 --network dev ${DOCKER_IMAGE_TAG}"
-
-                sh 'docker run -d --rm --name common-service -i 8081:8080 --network dev nguyenhoanganh/common-service'
+                sh 'docker run -d --rm --name common-service --link ${POSTGRES_CONTAINER_NAME}:postgres -p 8081:8080 --network dev nguyenhoanganh/common-service'
             }
         }
     }
