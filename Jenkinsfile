@@ -33,7 +33,7 @@ pipeline {
          stage('Packaging/Pushing image') {
 
            steps {
-                withDockerRegistry(credentialsId: 'dockerHub', url: 'https://index.docker.io/v1/') {
+                withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
                     sh 'docker build -t nguyenhoanganh/common-service'
                     sh 'docker push nguyenhoanganh/common-service'
                 }
