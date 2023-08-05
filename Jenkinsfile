@@ -2,11 +2,13 @@ pipeline {
     agent any
 
     tools {
-        maven 'my-gradle'
+        gradle 'my-gradle'
     }
 
     environment {
-            POSTGRESQL_ROOT_LOGIN = credentials('postgresql-root-login')
+        POSTGRESQL_ROOT_LOGIN = credentials('postgresql-root-login')
+        DOCKER_IMAGE_TAG = "nguyenhoanganh/common-service:${env.BUILD_NUMBER}"
+        POSTGRES_CONTAINER_NAME = "technology_core"
     }
 
     stages {
@@ -22,7 +24,7 @@ pipeline {
              }
         }
 
-         stage('Packaging/Pushing image') {
+        stage('Packaging/Pushing image') {
 
            steps {
                 withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
@@ -33,11 +35,6 @@ pipeline {
         }
 
         stage('Deploy Database') {
-            environment {
-                DOCKER_IMAGE_TAG = "nguyenhoanganh/common-service:${env.BUILD_NUMBER}"
-                POSTGRES_CONTAINER_NAME = "technology_core"
-            }
-
             steps {
                 // Pull the PostgreSQL Docker image
                 sh 'docker pull postgres:latest'
