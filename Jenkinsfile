@@ -20,12 +20,7 @@ pipeline {
 
         stage('Build') {
              steps {
-                script {
-                    def gradleHome = tool name: 'my-gradle', type: 'gradle'
-                    withEnv(["PATH+GRADLE=${gradleHome}/bin"]) {
-                        sh './gradlew clean build'
-                    }
-                }
+                 sh './gradlew clean build'
              }
         }
 
