@@ -20,7 +20,10 @@ pipeline {
 
         stage('Build') {
              steps {
-                 sh './gradlew clean build'
+                 // Build the Spring Boot project using Gradle
+                 withGradle {
+                     sh 'clean build'
+                 }
              }
         }
 
