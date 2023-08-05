@@ -1,5 +1,11 @@
 pipeline {
-    agent any
+     agent {
+            docker {
+                // Use the Docker-in-Docker (dind) image with Docker pre-installed
+                image 'docker:dind'
+                args '-v /var/run/docker.sock:/var/run/docker.sock'
+            }
+        }
 
     tools {
         gradle 'my-gradle'
@@ -23,18 +29,6 @@ pipeline {
                 sh 'gradle clean build -x test'
              }
         }
-
-        stage('Install Docker') {
-                    steps {
-                        // Download and install Docker on the Jenkins agent
-                        sh '''
-                            curl -fsSL https://get.docker.com -o get-docker.sh
-                            sudo sh get-docker.sh
-                            sudo usermod -aG docker jenkins
-                            sudo systemctl start docker
-                        '''
-                    }
-                }
 
         stage('Packaging/Pushing image') {
            steps {
