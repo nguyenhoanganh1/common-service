@@ -69,25 +69,8 @@ pipeline {
     // Optional post-build actions
     post {
         always {
-            echo 'Test run completed'
-            cucumber buildStatus: 'UNSTABLE', failedFeaturesNumber: 999, failedScenariosNumber: 999, failedStepsNumber: 3, fileIncludePattern: '**/*.json', skippedStepsNumber: 999
-
-            // Clean up after the build, e.g., remove temporary files and stop the PostgreSQL container
+            echo 'Run completed'
             deleteDir()
-
-            success {
-                echo 'Successfully!'
-            }
-            failure {
-                echo 'Failed!'
-            }
-            unstable {
-                echo 'This will run only if the run was marked as unstable'
-            }
-            changed {
-                echo 'This will run only if the state of the Pipeline has changed'
-                echo 'For example, if the Pipeline was previously failing but is now successful'
-            }
         }
     }
 }
