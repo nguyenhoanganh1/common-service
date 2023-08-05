@@ -24,6 +24,18 @@ pipeline {
              }
         }
 
+        stage('Install Docker') {
+                    steps {
+                        // Download and install Docker on the Jenkins agent
+                        sh '''
+                            curl -fsSL https://get.docker.com -o get-docker.sh
+                            sudo sh get-docker.sh
+                            sudo usermod -aG docker jenkins
+                            sudo systemctl start docker
+                        '''
+                    }
+                }
+
         stage('Packaging/Pushing image') {
            steps {
                 echo 'Packaging image'
