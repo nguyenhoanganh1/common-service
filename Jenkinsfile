@@ -3,6 +3,7 @@ pipeline {
 
     tools {
         gradle 'my-gradle'
+        docker 'my-docker'
     }
 
     environment {
