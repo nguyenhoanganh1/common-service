@@ -5,10 +5,6 @@ pipeline {
         gradle 'my-gradle'
     }
 
-     tools {
-        docker 'my-docker'
-     }
-
     environment {
         POSTGRESQL_ROOT_LOGIN = credentials('postgresql-root-login')
         DOCKER_IMAGE_TAG = "nguyenhoanganh/common-service:${env.BUILD_NUMBER}"
