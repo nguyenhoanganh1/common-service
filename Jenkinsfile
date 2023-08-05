@@ -10,17 +10,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                // Check out the GitHub repository
-                checkout([$class: 'GitSCM',
-                    branches: [[name: '*/master']],
-                    userRemoteConfigs: [[
-                        url: 'https://github.com/nguyenhoanganh1/common-service.git'
-                    ]]
-                ])
-            }
-        }
 
         stage('Build') {
             steps {
