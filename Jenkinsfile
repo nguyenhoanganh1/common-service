@@ -12,6 +12,11 @@ pipeline {
     }
 
     stages {
+        stage ("Checkout SCM") {
+             steps {
+                checkout scm
+             }
+        }
 
         stage('Build') {
              steps {
@@ -45,16 +50,6 @@ pipeline {
                 sh "docker run -d --rm network dev --name ${POSTGRES_CONTAINER_NAME} -v ${POSTGRES_CONTAINER_NAME}-data:/var/lib/postgres -e POSTGRES_ROOT_PASSWORD=${POSTGRES_ROOT_LOGIN_PSW} -p 5432:5432 postgres:latest"
                 sh 'sleep 15'
             }
-
-            steps {
-                echo 'Deploying and cleaning'
-                sh 'docker pull nguyenhoanganh/common-service'
-                sh 'docker container stop common-service || echo "this container does not exists"'
-                sh 'docker network create dev || echo "this network exists"'
-                sh 'echo y | docker container prune '
-                // Start the Spring Boot application container and link it with the PostgreSQL container
-                sh 'docker run -d --rm --name common-service --link ${POSTGRES_CONTAINER_NAME}:postgres -p 8081:8080 --network dev nguyenhoanganh/common-service'
-            }
         }
 
         stage('Starting Deploy Application') {
@@ -74,8 +69,28 @@ pipeline {
     // Optional post-build actions
     post {
         always {
+            echo 'Test run completed'
+            cucumber buildStatus: 'UNSTABLE', failedFeaturesNumber: 999, failedScenariosNumber: 999, failedStepsNumber: 3, fileIncludePattern: '**/*.json', skippedStepsNumber: 999
+
             // Clean up after the build, e.g., remove temporary files and stop the PostgreSQL container
             deleteDir()
+
+            success {
+                echo 'Successfully!'
+            }
+            failure {
+                echo 'Failed!'
+            }
+            unstable {
+                echo 'This will run only if the run was marked as unstable'
+            }
+            changed {
+                echo 'This will run only if the state of the Pipeline has changed'
+                echo 'For example, if the Pipeline was previously failing but is now successful'
+            }
+        }
+        options {
+            timeout(time: 60, unit: 'MINUTES')
         }
     }
 }
