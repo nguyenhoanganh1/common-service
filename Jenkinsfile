@@ -23,7 +23,7 @@ pipeline {
                 script {
                     def gradleHome = tool name: 'Gradle', type: 'gradle'
                     withEnv(["PATH+GRADLE=${gradleHome}/bin"]) {
-                        sh './gradlew clean build -x test'
+                        sh './gradlew clean build'
                     }
                 }
              }
