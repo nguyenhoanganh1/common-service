@@ -68,7 +68,7 @@ pipeline {
                 sh 'docker network create dev || echo "this network exists"'
                 sh 'echo y | docker container prune '
                 // Start the Spring Boot application container and link it with the PostgreSQL container
-                sh "docker run -d --rm --name common-service-app --link ${POSTGRES_CONTAINER_NAME}:postgres -p 8080:8080 --network dev ${DOCKER_IMAGE_TAG}"
+                sh "docker run -d --rm --name common-service --link ${POSTGRES_CONTAINER_NAME}:postgres -p 8080:8080 --network dev ${DOCKER_IMAGE_TAG}"
             }
         }
     }
