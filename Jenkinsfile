@@ -1,11 +1,5 @@
 pipeline {
-     agent {
-            docker {
-                // Use the Docker-in-Docker (dind) image with Docker pre-installed
-                image 'docker:dind'
-                args '-v /var/run/docker.sock:/var/run/docker.sock'
-            }
-        }
+     agent any
 
     tools {
         gradle 'my-gradle'
