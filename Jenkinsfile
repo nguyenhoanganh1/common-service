@@ -25,8 +25,8 @@ pipeline {
         }
 
         stage('Packaging/Pushing image') {
-           echo 'Packaging image'
            steps {
+                echo 'Packaging image'
                 withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
                     sh 'docker build -t nguyenhoanganh/common-service'
                     sh 'docker push nguyenhoanganh/common-service'
@@ -35,8 +35,8 @@ pipeline {
         }
 
         stage('Run image') {
-            echo 'Run image'
             steps {
+                echo 'Run image'
                 // Pull the PostgreSQL Docker image
                 sh 'docker pull postgres:latest'
                 sh 'docker network create dev || echo "this network exists"'
