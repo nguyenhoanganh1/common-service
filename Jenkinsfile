@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        maven 'my-maven'
+        maven 'my-gradle'
     }
 
     environment {
@@ -12,11 +12,14 @@ pipeline {
     stages {
 
         stage('Build') {
-            steps {
-                sh 'mvn --version'
-                sh 'java --version'
-                sh 'mvn clean package -Dmaven.test.failure.ignore=true'
-            }
+             steps {
+                script {
+                    def gradleHome = tool name: 'Gradle', type: 'gradle'
+                    withEnv(["PATH+GRADLE=${gradleHome}/bin"]) {
+                        sh './gradlew clean build -x test'
+                    }
+                }
+             }
         }
 
          stage('Packaging/Pushing image') {
