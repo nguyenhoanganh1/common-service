@@ -27,7 +27,7 @@ pipeline {
         stage('Packaging/Pushing image') {
            steps {
                 echo 'Packaging image'
-                withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
+                withDockerRegistry(credentialsId: 'dockerhub', url: 'https://hub.docker.com/') {
                     sh 'docker build -t nguyenhoanganh/common-service'
                     sh 'docker push nguyenhoanganh/common-service'
                 }
