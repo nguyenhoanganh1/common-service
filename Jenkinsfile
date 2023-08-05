@@ -3,8 +3,11 @@ pipeline {
 
     tools {
         gradle 'my-gradle'
-        docker 'my-docker'
     }
+
+     tools {
+        docker 'my-docker'
+     }
 
     environment {
         POSTGRESQL_ROOT_LOGIN = credentials('postgresql-root-login')
