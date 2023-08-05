@@ -20,10 +20,7 @@ pipeline {
 
         stage('Build') {
              steps {
-                 // Build the Spring Boot project using Gradle
-                 withGradle {
-                     sh 'clean build'
-                 }
+                sh 'gradle clean build'
              }
         }
 
@@ -36,7 +33,7 @@ pipeline {
            }
         }
 
-        stage('Start Deploy Database') {
+        stage('Deploy') {
             steps {
                 // Pull the PostgreSQL Docker image
                 sh 'docker pull postgres:latest'
@@ -48,9 +45,6 @@ pipeline {
                 sh "docker run -d --rm network dev --name ${POSTGRES_CONTAINER_NAME} -v ${POSTGRES_CONTAINER_NAME}-data:/var/lib/postgres -e POSTGRES_ROOT_PASSWORD=${POSTGRES_ROOT_LOGIN_PSW} -p 5432:5432 postgres:latest"
                 sh 'sleep 15'
             }
-        }
-
-        stage('Starting Deploy Application') {
 
             steps {
                 echo 'Deploying and cleaning'
