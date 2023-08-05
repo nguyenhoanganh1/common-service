@@ -25,6 +25,7 @@ pipeline {
         }
 
         stage('Packaging/Pushing image') {
+
            steps {
                 withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
                     sh 'docker build -t nguyenhoanganh/common-service'
@@ -33,7 +34,8 @@ pipeline {
            }
         }
 
-        stage('Deploy') {
+        stage('Run image') {
+
             steps {
                 // Pull the PostgreSQL Docker image
                 sh 'docker pull postgres:latest'
@@ -55,7 +57,9 @@ pipeline {
                 // Start the Spring Boot application container and link it with the PostgreSQL container
                 sh 'docker run -d --rm --name common-service --link ${POSTGRES_CONTAINER_NAME}:postgres -p 8081:8080 --network dev nguyenhoanganh/common-service'
             }
+
         }
+
     }
 
     // Optional post-build actions
