@@ -25,7 +25,7 @@ pipeline {
         }
 
         stage('Packaging/Pushing image') {
-
+           echo 'Packaging image'
            steps {
                 withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
                     sh 'docker build -t nguyenhoanganh/common-service'
@@ -35,7 +35,7 @@ pipeline {
         }
 
         stage('Run image') {
-
+            echo 'Run image'
             steps {
                 // Pull the PostgreSQL Docker image
                 sh 'docker pull postgres:latest'
@@ -43,7 +43,6 @@ pipeline {
                 sh 'docker container stop nguyenhoanganh-postgres || echo "this container does not exists"'
                 sh 'echo y | docker container prune '
                 sh 'docker volume rm nguyenhoanganh-postgres-data || echo "no volume"'
-                // Start the PostgreSQL container
                 sh "docker run -d --rm network dev --name ${POSTGRES_CONTAINER_NAME} -v ${POSTGRES_CONTAINER_NAME}-data:/var/lib/postgres -e POSTGRES_ROOT_PASSWORD=${POSTGRES_ROOT_LOGIN_PSW} -p 5432:5432 postgres:latest"
                 sh 'sleep 15'
             }
@@ -54,7 +53,6 @@ pipeline {
                 sh 'docker container stop common-service || echo "this container does not exists"'
                 sh 'docker network create dev || echo "this network exists"'
                 sh 'echo y | docker container prune '
-                // Start the Spring Boot application container and link it with the PostgreSQL container
                 sh 'docker run -d --rm --name common-service --link ${POSTGRES_CONTAINER_NAME}:postgres -p 8081:8080 --network dev nguyenhoanganh/common-service'
             }
 
