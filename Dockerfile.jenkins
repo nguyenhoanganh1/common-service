@@ -1,0 +1,24 @@
+# Use the latest Jenkins LTS (Long Term Support) image
+FROM jenkins/jenkins:lts
+
+# Install AWS CLI
+USER root
+RUN apt-get update && \
+    apt-get install -y awscli && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install kubectl
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl" && \
+    chmod +x kubectl && \
+    mv kubectl /usr/local/bin/
+
+# Switch back to the Jenkins user
+USER jenkins
+
+# Install desired plugins (if any) by copying plugins.txt to the container
+# Example: COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
+# RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
+
+# Expose Jenkins port (default: 8088)
+EXPOSE 8088

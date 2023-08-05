@@ -1,0 +1,18 @@
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+      # Alternatively, you can use the following:
+      # properties:
+      #   hibernate:
+      #     hbm2ddl.auto: update
+  datasource:
+    url: jdbc:postgresql://localhost:5432/technology_core
+    username: postgres
+    password: 123456
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      connection-timeout: 30000
+      idle-timeout: 30000
+      max-lifetime: 60000
